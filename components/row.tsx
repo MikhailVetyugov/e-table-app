@@ -1,4 +1,5 @@
 import { COLUMN_COUNT } from "@/constants";
+import { Cell } from "./cell";
 
 interface IRowProps {
   index: number;
@@ -7,12 +8,12 @@ interface IRowProps {
 export const Row: React.FC<IRowProps> = ({ index }) => {
   const cells = [];
 
-  const className = "shadow-[0px_-1px_0_transparent,1px_0_0_transparent] shadow-slate-500 mr-px relative z-0 text-center"
+  const numberCellClassName = "shadow-[0_-1px_0_transparent,1px_0_0_transparent] shadow-slate-500 mr-px relative z-0 text-center"
 
-  cells.push(<div key="number-cell" className={className}>{index}</div>)
+  cells.push(<div key="number-cell" className={numberCellClassName}>{index}</div>)
 
   for (let i = 0; i < COLUMN_COUNT; i++) {
-    cells.push(<input key={i} className="outline outline-slate-300 outline-1" />)
+    cells.push(<Cell key={i} />);
   }
 
   return (

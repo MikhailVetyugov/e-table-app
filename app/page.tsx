@@ -4,15 +4,18 @@ import { Row } from "@/components/row";
 import { ROW_COUNT } from "@/constants";
 import { useScrollbarElement } from "@/hooks/use-scrollbar-element";
 
-// selected color
-// move out to components
+// redux https://habr.com/ru/articles/737666/
+// 2-й клик по выбранной ячейке ставит курсор в конец
 // sum formula
+// move out to components
 // selection
 // copy icon
 // copy functionality
 // autosave
+// resize column/row
+// (видеть весь контент ячейки при редактировании)
 // (вставить строку/столбец)
-// (при выделении ячейки выделить ячейку столбца/строки)
+// (при выделении ячейки выделить столбец/строку)
 export default function Home() {
   const { containerRef, scrollbarRef } = useScrollbarElement();
 
