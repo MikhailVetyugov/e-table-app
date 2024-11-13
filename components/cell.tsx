@@ -1,6 +1,7 @@
 import { ChangeEvent, ClipboardEvent, KeyboardEvent, MouseEvent, useCallback, useState } from "react";
 import { isValidKeyboardEvent } from "@/utils/isValidKeyboardEvent";
 import { writeClipboardText } from "@/utils/writeClipboardText";
+import { CellInput } from "./cell-input";
 
 export const Cell: React.FC = () => {
   const [isFocused, setFocused] = useState(false);
@@ -30,7 +31,7 @@ export const Cell: React.FC = () => {
     }
   }, []);
 
-  const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => setValue(event.target.value), []);
+  const handleChange = useCallback((value: string) => setValue(value), []);
 
   const handleCopy = useCallback(async (event: ClipboardEvent) => {
     const text = (event.target as HTMLDivElement).innerText;
@@ -40,15 +41,13 @@ export const Cell: React.FC = () => {
   const handlePaste = useCallback((event: ClipboardEvent) => setValue(event.clipboardData.getData('Text')), []);
 
   const className = isFocused
-    ? 'ps-1 shadow-[inset_-2px_-2px,inset_1px_1px,-1px_0,0_-1px,-1px_-1px] shadow-blue-600 outline-none'
+    ? 'ps-1 shadow-[inset_-2px_-2px,inset_1px_1px,-1px_0,0_-1px,-1px_-1px] shadow-blue-600 outline-none w-full'
     : 'ps-1 shadow-[inset_-1px_-1px] shadow-slate-300 overflow-hidden';
 
   if (isEntering) {
     return (
-      <input
+      <CellInput
         className={className}
-        autoFocus
-        spellCheck={false}
         value={value}
         onChange={handleChange}
         onBlur={handleBlur}
