@@ -12,8 +12,8 @@ export const Row: React.FC<IRowProps> = ({ index }) => {
 
   cells.push(<div key="number-cell" className={numberCellClassName}>{index}</div>)
 
-  for (let i = 0; i < COLUMN_COUNT; i++) {
-    cells.push(<Cell key={i} />);
+  for (let colIndex = 0; colIndex < COLUMN_COUNT; colIndex++) {
+    cells.push(<Cell key={colIndex} row={index} col={colIndex} />);
   }
 
   return (

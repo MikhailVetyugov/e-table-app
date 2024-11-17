@@ -1,9 +1,19 @@
-import { ChangeEvent, ClipboardEvent, KeyboardEvent, MouseEvent, useCallback, useState } from "react";
+import {  ClipboardEvent, KeyboardEvent, memo, MouseEvent, useCallback, useContext, useState } from "react";
 import { isValidKeyboardEvent } from "@/utils/isValidKeyboardEvent";
 import { writeClipboardText } from "@/utils/writeClipboardText";
 import { CellInput } from "./cell-input";
+import { TableContext } from "./tableContext";
+import { useCellRangeHandlers } from "@/hooks/use-cell-range-handlers";
+import { isCellInRange } from "@/utils/isCellInRange";
 
-export const Cell: React.FC = () => {
+interface ICellProps {
+  row: number;
+  col: number;
+}
+
+export const Cell: React.FC<ICellProps> = memo(({ row, col }) => {
+  const tableContext = useContext(TableContext);
+
   const [isFocused, setFocused] = useState(false);
   const [isEntering, setEntering] = useState(false);
   const [value, setValue] = useState('');
@@ -40,9 +50,17 @@ export const Cell: React.FC = () => {
 
   const handlePaste = useCallback((event: ClipboardEvent) => setValue(event.clipboardData.getData('Text')), []);
 
+  const { mouseDownHandler, mouseUpHandler, mouseOverHandler } = useCellRangeHandlers({
+    tableContext,
+    row,
+    col,
+  });
+
+  const rangeClassName = isCellInRange(row, col, tableContext?.range) ? 'bg-blue-100' : '';
+
   const className = isFocused
-    ? 'ps-1 shadow-[inset_-2px_-2px,inset_1px_1px,-1px_0,0_-1px,-1px_-1px] shadow-blue-600 outline-none w-full'
-    : 'ps-1 shadow-[inset_-1px_-1px] shadow-slate-300 overflow-hidden';
+    ? `ps-1 shadow-[inset_-2px_-2px,inset_1px_1px,-1px_0,0_-1px,-1px_-1px] shadow-blue-600 outline-none w-full ${rangeClassName}`
+    : `ps-1 shadow-[inset_-1px_-1px] shadow-slate-300 overflow-hidden ${rangeClassName}`;
 
   if (isEntering) {
     return (
@@ -64,8 +82,11 @@ export const Cell: React.FC = () => {
       onKeyDown={handleKeyDown}
       onCopy={handleCopy}
       onPaste={handlePaste}
+      onMouseDown={mouseDownHandler}
+      onMouseUp={mouseUpHandler}
+      onMouseOver={mouseOverHandler}
       tabIndex={0}
       children={value}
     />
   );
-};
+});

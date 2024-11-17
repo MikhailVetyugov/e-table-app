@@ -14,13 +14,13 @@ interface ICellInputProps {
 }
 
 export const CellInput: React.FC<ICellInputProps> = memo(({ className, value, onChange, onBlur }) => {
-  const [open, setOpen] = useState(false);
+  const [open, setPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
 
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
 
-    setOpen(/^=\s*S/.test(value));
+    setPopoverOpen(/^=\s*S/.test(value));
 
     onChange(value);
   }, [onChange]);
@@ -29,7 +29,7 @@ export const CellInput: React.FC<ICellInputProps> = memo(({ className, value, on
     if (event.relatedTarget !== popoverRef.current) {
       onBlur();
     } else {
-      setOpen(false);
+      setPopoverOpen(false);
     }
   }, [onBlur]);
 
@@ -50,9 +50,6 @@ export const CellInput: React.FC<ICellInputProps> = memo(({ className, value, on
         align="start"
         onOpenAutoFocus={e => e.preventDefault()}
         onCloseAutoFocus={e => e.preventDefault()}
-        alignOffset={0}
-        collisionPadding={0}
-        collisionBoundary={[]}
         className="px-0 py-1"
       >
         <FormulaHint onSelect={onChange} />
