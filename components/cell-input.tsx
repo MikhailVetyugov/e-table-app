@@ -4,7 +4,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import { hasActiveFormula } from "@/utils/hasActiveFormula";
 import { FormulaHint } from "./formula-hint";
+import { useFormulaRange } from "@/hooks/use-formula-range";
 
 interface ICellInputProps {
   className: string;
@@ -17,6 +19,9 @@ export const CellInput: React.FC<ICellInputProps> = memo(({ className, value, on
   const [open, setPopoverOpen] = useState(false);
   const popoverRef = useRef(null);
 
+  const isActiveFormula = hasActiveFormula(value);
+  useFormulaRange({ isActiveFormula, value, onChange, onBlur });
+
   const handleChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
 
@@ -27,11 +32,13 @@ export const CellInput: React.FC<ICellInputProps> = memo(({ className, value, on
 
   const handleBlur = useCallback((event: FocusEvent) => {
     if (event.relatedTarget !== popoverRef.current) {
-      onBlur();
+      if (!isActiveFormula) {
+        onBlur();
+      }
     } else {
       setPopoverOpen(false);
     }
-  }, [onBlur]);
+  }, [onBlur, isActiveFormula]);
 
   return (
     <Popover open={open}>
@@ -57,3 +64,5 @@ export const CellInput: React.FC<ICellInputProps> = memo(({ className, value, on
     </Popover>
   );
 });
+
+CellInput.displayName = 'CellInput';

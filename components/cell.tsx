@@ -1,10 +1,10 @@
 import {  ClipboardEvent, KeyboardEvent, memo, MouseEvent, useCallback, useContext, useState } from "react";
 import { isValidKeyboardEvent } from "@/utils/isValidKeyboardEvent";
 import { writeClipboardText } from "@/utils/writeClipboardText";
-import { CellInput } from "./cell-input";
-import { TableContext } from "./tableContext";
 import { useCellRangeHandlers } from "@/hooks/use-cell-range-handlers";
 import { isCellInRange } from "@/utils/isCellInRange";
+import { CellInput } from "./cell-input";
+import { TableContext } from "./tableContext";
 
 interface ICellProps {
   row: number;
@@ -46,7 +46,7 @@ export const Cell: React.FC<ICellProps> = memo(({ row, col }) => {
   const handleCopy = useCallback(async (event: ClipboardEvent) => {
     const text = (event.target as HTMLDivElement).innerText;
     await writeClipboardText(text);
-  }, [value]);
+  }, []);
 
   const handlePaste = useCallback((event: ClipboardEvent) => setValue(event.clipboardData.getData('Text')), []);
 
@@ -86,7 +86,10 @@ export const Cell: React.FC<ICellProps> = memo(({ row, col }) => {
       onMouseUp={mouseUpHandler}
       onMouseOver={mouseOverHandler}
       tabIndex={0}
-      children={value}
-    />
+    >
+      {value}
+    </div>
   );
 });
+
+Cell.displayName = 'Cell';
